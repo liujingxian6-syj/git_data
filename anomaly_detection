@@ -1,1 +1,54 @@
+# 参数说明
+ ##个性化参数
+#[class:prophet_model]
+prophet_model.holidays_list = [] #'YYYY-MM-DD HH:MM:SS'
+prophet_model.lower_win = []  #int:<=0
+prophet_model.upper_win = []  #int:>=0
+prophet_model.freq = 'M' #string: 'M'或'D'
+prophet_model.predict_freq_num = int  #min =1
+prophet_model.data = pd.DataFrame() #ds('YYYY-MM-DD HH:MM:SS'),y(float)
+prophet_model.model_save_path = str #路径/文件名
+prophet_model.AnomalyTime = []  #'YYYY-MM-DD HH:MM:SS'
+#[class:data_CycleCheck]
+data_CycleCheck.data = prophet_model.data
+data_CycleCheck.sen_level = int  #min=1,max=99
+data_CycleCheck.N = int  #int  #min=1，默认值=5
+data_CycleCheck.cycle_day = int #min=1
+#[class:DBSCAN_model]
+DBSCAN_model.data = pd.DataFrame()  #ds('YYYY-MM-DD HH:MM:SS'),y(float),yhat(float),δ(float),MAPE(float)
 
+##超参数取值
+#[class:prophet_model]
+prophet_model.parameters_grid = {
+        'yearly_seasonality': [True, False],
+        'weekly_seasonality': [True, False],
+        'daily_seasonality': [False, True], 
+        'seasonality_mode': ['additive','multiplicative']
+    }
+prophet_model.parameters_add = {
+        "seasonality_prior_scale": list(np.arange(10, 0, -1)),
+        "changepoint_prior_scale": list(np.arange(0.05, 10, 0.5)), 
+        "holidays_prior_scale": list(np.arange(10, 0, -1))
+    }  #其中list:枚举，[int],min=0,max=10
+#[class:DBSCAN_model]
+DBSCAN_model.eps = int  #int:>0
+DBSCAN_model.min_samples = int  #int:>1
+
+##导入内置模块
+import numpy as np
+import pandas as pd
+#[class:prophet_model]
+import os
+import joblib
+from fbprophet import Prophet
+from fbprophet.diagnostics import cross_validation
+from fbprophet.diagnostics import performance_metrics 
+from fbprophet.plot import plot_cross_validation_metric
+from itertools import product
+import datetime
+#[class:fft_model]
+from sklearn import linear_model
+from scipy.fftpack import fft
+import matplotlib.pyplot as plt
+#[class:DBSCAN_model]
+from sklearn.cluster import DBSCAN
